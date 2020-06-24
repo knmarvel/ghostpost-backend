@@ -3,6 +3,7 @@ from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from ghostpost.posts.serializers import GhostPostSerializer
+from ghostpost.posts.helpers import private_url_maker
 
 # Create your views here.
 
