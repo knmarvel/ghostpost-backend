@@ -19,7 +19,7 @@ from rest_framework import routers
 from ghostpost.posts import views
 
 router = routers.DefaultRouter()
-router.register(r'ghostposts', views.GhostPostViewSet)
+router.register(r'ghostposts', views.GhostPostViewSet, basename="/")
 
 urlpatterns = [
     path('', include(router.urls)),

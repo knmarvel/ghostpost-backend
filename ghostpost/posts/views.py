@@ -11,8 +11,32 @@ class GhostPostViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows ghostposts to be viewed or edited
     """
-    queryset = GhostPost.objects.all().order_by('-datetime')
+    
+    # queryset = GhostPost.objects.all().order_by(ordering_by)
     serializer_class = GhostPostSerializer
+
+    def get_queryset(self):
+        """
+        This view filters and sorts the posts according to the URL
+        """
+        filter_sort_info = self.request.query_params
+        print(filter_sort_info)
+        queryset = ""
+        if filter_sort_info["brn"] == "n":
+            queryset = GhostPost.objects.all()
+        elif filter_sort_info["brn"] == "b":
+            queryset = GhostPost.objects.filter(boast=True)
+            print(queryset)
+        else:
+            queryset = GhostPost.objects.filter(boast=False)
+        if filter_sort_info['sort-by'] == "score":
+            queryset = sorted(queryset, key = lambda a : -a.score())
+        elif filter_sort_info['sort-by'] == "-score":
+            queryset = sorted(queryset, key = lambda a : a.score())
+        else:
+            sort_by = self.request.query_params['sort-by']
+            queryset = queryset.order_by(sort_by)
+        return queryset
 
     @action(detail=True, methods=['post'])
     def upvote(self, request, pk=id):
